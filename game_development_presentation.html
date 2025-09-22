@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲーム開発プロジェクト - 夢の実現への挑戦</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Yu Gothic', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 154, 158, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .presentation-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+        }
+        
+        .slide {
+            padding: 40px 60px;
+            min-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23ff9a9e" opacity="0.3"/><circle cx="60" cy="30" r="1.5" fill="%234ecdc4" opacity="0.3"/><circle cx="40" cy="70" r="2.5" fill="%2345b7d1" opacity="0.3"/><circle cx="80" cy="60" r="1" fill="%2396ceb4" opacity="0.3"/></svg>') repeat;
+            pointer-events: none;
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+        
+        .slide:nth-child(even) {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .slide-number {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            font-size: 3em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        h2 {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h3 {
+            font-size: 1.5em;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+            padding-left: 20px;
+            border-left: 4px solid #ff6b6b;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content-section::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(45deg, #ff9a9e, #4ecdc4, #45b7d1, #96ceb4);
+            border-radius: 18px;
+            z-index: -1;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border: 3px dashed #ff6b6b;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .image-placeholder:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+        
+        .image-placeholder::before {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .image-placeholder-text {
+            text-align: center;
+            color: #666;
+            font-weight: bold;
+        }
+        
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .tech-item {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tech-item::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+        
+        .tech-item:hover::before {
+            animation: shine 0.6s ease-out;
+            opacity: 1;
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        .highlight-box {
+            background: linear-gradient(45deg, #fff3cd, #ffeaa7);
+            border-left: 6px solid #ffb347;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(255, 179, 71, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .game-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ff9a9e, #4ecdc4, #45b7d1);
+            border-radius: 22px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px) rotate(2deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .feature-card h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .progress-section {
+            background: linear-gradient(45deg, #e8f5e8, #f0f8ff);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 25px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+            box-shadow: inset 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+            height: 100%;
+            border-radius: 25px;
+            transition: width 1s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: progress-shine 2s ease-in-out infinite;
+        }
+        
+        @keyframes progress-shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+        
+        .text-center { text-align: center; }
+        .mb-4 { margin-bottom: 2rem; }
+        .mt-4 { margin-top: 2rem; }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border-left: 4px solid #4ecdc4;
+            transition: all 0.3s ease;
+        }
+        
+        li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .emoji { font-size: 1.2em; margin-right: 10px; }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: #666;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- スライド1: タイトル -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">01</div>
+                <h1>ゲーム開発プロジェクト</h1>
+                <p class="subtitle">夢の実現への挑戦 🎮✨</p>
+            </div>
+            <div class="content-section text-center">
+                <h3>Try Flower - 花畑テリトリーバトル</h3>
+                <p style="font-size: 1.1em; margin: 20px 0;">AI駆動開発による革新的アプローチ</p>
+                <div class="image-placeholder">
+                    <div class="image-placeholder-text">
+                        <img src="ゲーム画面1.png" alt="ゲーム画面" style="max-width: 45%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド2: プロジェクト概要 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">02</div>
+                <h2>プロジェクト概要 🎯</h2>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: start;">
+                <div>
+                    <div class="content-section">
+                        <h3><span class="emoji">🎮</span>基本情報</h3>
+                        <ul>
+                            <li><strong>ジャンル:</strong> リアルタイム戦略ゲーム</li>
+                            <li><strong>プレイ人数:</strong> 5人対戦（1人 + CPU4人）</li>
+                            <li><strong>開発環境:</strong> Unity 6.1 + C#</li>
+                            <li><strong>開発手法:</strong> AI駆動開発（Cursor使用）</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="highlight-box">
+                        <h3><span class="emoji">💡</span>ゲームコンセプト</h3>
+                        <p>花を植えて領地を拡張し、最も多くの領地を獲得したプレイヤーが勝利する独創的な戦略ゲーム</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="image-placeholder">
+                        <div class="image-placeholder-text">
+                            <img src="開発中画面3.png" alt="仕様書作成" style="max-width: 100%; height: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド3: 技術スタック -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">03</div>
+                <h2>技術スタック 🛠️</h2>
+            </div>
+            
+            <div class="tech-stack">
+                <div class="tech-item">Unity 6.1</div>
+                <div class="tech-item">C#</div>
+                <div class="tech-item">Cursor (AI)</div>
+                <div class="tech-item">Stable Diffusion</div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+                <div class="image-placeholder">
+                    <div class="image-placeholder-text">
+                        <img src="開発中画面2.png" alt="Cursor画面" style="max-width: 95%; height: auto;">
+                    </div>
+                </div>
+                <div class="image-placeholder">
+                    <div class="image-placeholder-text">
+                        <img src="画像生成2.png" alt="画像生成サーバー" style="max-width: 70%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド4: 開発アプローチの変化 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">04</div>
+                <h2>開発アプローチの進化 🔄</h2>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+                <div class="content-section">
+                    <h3><span class="emoji">🎨</span>当初のアプローチ</h3>
+                    <ul>
+                        <li>2Dベースでの開発</li>
+                        <li>AI画像生成による素材作成</li>
+                        <li>静的なビジュアル重視</li>
+                    </ul>
+                    <div class="image-placeholder" style="height: 200px;">
+                        <div class="image-placeholder-text">
+                            <img src="画像生成6.png" alt="キャラクター生成" style="max-width: 60%; height: auto;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-section">
+                    <h3><span class="emoji">🎯</span>現在のアプローチ</h3>
+                    <ul>
+                        <li>3Dモデルベースに転換</li>
+                        <li>動的なアニメーション実現</li>
+                        <li>より豊かなゲーム体験</li>
+                    </ul>
+                    <div class="image-placeholder" style="height: 200px;">
+                        <div class="image-placeholder-text">
+                            <img src="開発中画面1.png" alt="3D開発画面" style="max-width: 60%; height: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="highlight-box text-center">
+                <h3>💡 技術的転換点</h3>
+                <p>AI画像生成ではアニメーション制作に限界があることを発見し、<br>
+                より表現豊かな3Dモデルアプローチに移行</p>
+            </div>
+        </div>
+
+        <!-- スライド5: ゲーム機能 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">05</div>
+                <h2>主要ゲーム機能 🌟</h2>
+            </div>
+            
+            <div class="game-features">
+                <div class="feature-card">
+                    <div class="feature-icon">🌸</div>
+                    <h4>花植えシステム</h4>
+                    <p>戦略的に花を植えて領地を拡張</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h4>領地争奪戦</h4>
+                    <p>囲碁ルール適用の陣取りバトル</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎁</div>
+                    <h4>アイテムシステム</h4>
+                    <p>8種類の特殊アイテム効果</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h4>AI対戦</h4>
+                    <p>4体のCPUとの白熱バトル</p>
+                </div>
+            </div>
+            
+            <div class="image-placeholder" style="margin-top: 30px;">
+                <div class="image-placeholder-text">
+                    <img src="ゲーム画面2.png" alt="ゲーム画面" style="max-width: 50%; height: auto;">
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド6: 開発進捗 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">06</div>
+                <h2>開発進捗状況 📊</h2>
+            </div>
+            
+            <div class="progress-section">
+                <h3><span class="emoji">🚀</span>現在の進捗</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 35%;"></div>
+                </div>
+                <p class="text-center"><strong>35%完了</strong> - 基盤システム構築済み</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div class="content-section">
+                    <h3><span class="emoji">✅</span>完了項目</h3>
+                    <ul>
+                        <li>プロジェクト設計</li>
+                        <li>基本システム構築</li>
+                        <li>3Dマップ生成</li>
+                        <li>キャラクター配置</li>
+                    </ul>
+                </div>
+                <div class="content-section">
+                    <h3><span class="emoji">🔄</span>進行中・予定</h3>
+                    <ul>
+                        <li>ゲームロジック実装</li>
+                        <li>AI対戦システム</li>
+                        <li>UI/UX設計</li>
+                        <li>最終調整・テスト</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- スライド7: 今後の展望 -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-number">07</div>
+                <h2>今後の展望 🌈</h2>
+            </div>
+            
+            <div class="content-section">
+                <h3><span class="emoji">🎯</span>プロジェクトの意義</h3>
+                <ul>
+                    <li>AI技術を活用した効率的な開発手法の習得</li>
+                    <li>個人でも高品質なゲーム開発が可能であることの実証</li>
+                    <li>技術的挑戦を通じたスキルアップ</li>
+                    <li>創造性とテクノロジーの融合</li>
+                </ul>
+            </div>
+            
+            <div class="highlight-box">
+                <h3><span class="emoji">💭</span>将来への想い</h3>
+                <p style="font-size: 1.1em;">
+                    このプロジェクトは単なるゲーム制作を超え、AI時代における<br>
+                    新しい創作活動の可能性を探求する挑戦です。<br>
+                    技術の進歩を活用しながら、人間の創造性を最大化していきます。
+                </p>
+            </div>
+            
+            <button class="btn-primary">夢の実現へ、挑戦継続中！ 🚀</button>
+        </div>
+    </div>
+</body>
+</html>
